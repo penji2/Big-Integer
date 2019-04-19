@@ -11,8 +11,8 @@ class BigInteger:
     def convert_to_str(array):
         # converting integer list to string list
         s = [str(i) for i in array]
-        result = int("".join(s))
-        return str(result)
+        result = str("".join(s))
+        return result
 
     def printing(self):
         print(self.a_number)
@@ -35,7 +35,6 @@ class BigInteger:
             result.append(guard)
         result.reverse()
         result_object = BigInteger(BigInteger.convert_to_str(result))
-        # return BigInteger.convert_to_str(result)
         return result_object, BigInteger.convert_to_str(result)
 
     @staticmethod
@@ -73,13 +72,13 @@ class BigInteger:
 
     def multiplying(self, x):
         """number has a form : BigNumber1 = high1*B**len(object.a_number) + low1"""
-        # if len(x.a_number) < len(self.a_number):
-        #     x.a_number = BigInteger.fill_with_zeroes(x.a_number, len(self.a_number))
-        if len(self.a_number) < 3 or len(x.a_number) < 3:
+        self_len = len(self.a_number)
+        len_x = len(x.a_number)
+        if self_len < 3 or len_x < 3:
             string_result = str(int(self.a_number) * int(x.a_number))
             result = BigInteger(string_result)
             return result
-
+        print(str(10 ** (len(self.a_number))))
         high1, low1 = BigInteger.split_string(self.a_number, len(self.a_number))
         high2, low2 = BigInteger.split_string(x.a_number, len(x.a_number))
 
@@ -89,7 +88,10 @@ class BigInteger:
 
         z2 = high1.multiplying(high2)
 
-        return (z2.multiplying(10**(len(self.a_number)))).add(((z1.subtruct(z2)[0].subtruct(z0))[0].multiplying(10**(len(self.a_number)//2).add(z0)[0])))
+        print(str(10 ** (len(self.a_number))))
+        tmp_mul1 = BigInteger(str(10 ** (len(self.a_number))))
+        tmp_mul2 = BigInteger(str(10 ** (len(self.a_number) // 2)))
+        return z2.multiplying(tmp_mul1).add(((z1.subtract(z2)[0].subtract(z0))[0].multiplying(tmp_mul2).add(z0)[0]))
 
     def factorial(self):
         unit = BigInteger('1')
@@ -139,3 +141,5 @@ def main():
 
 
 main()
+
+
