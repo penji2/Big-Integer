@@ -17,7 +17,7 @@ class BigInteger:
     def printing(self):
         print(self.a_number)
 
-    def add(self, x):
+    def __add__(self, x):
         result = []
         guard = 0
         if len(x.a_number) < len(self.a_number):
@@ -35,13 +35,13 @@ class BigInteger:
             result.append(guard)
         result.reverse()
         result_object = BigInteger(BigInteger.convert_to_str(result))
-        return result_object, BigInteger.convert_to_str(result)
+        return result_object
 
     @staticmethod
     def fill_with_zeroes(string, length):
         return string.zfill(length)
 
-    def subtract(self, x):
+    def __sub__(self, x):
         result = []
         guard = 0
         if len(x.a_number) < len(self.a_number):
@@ -57,41 +57,40 @@ class BigInteger:
                 guard = 1
         result.reverse()
         result_object = BigInteger(BigInteger.convert_to_str(result))
-        return result_object, BigInteger.convert_to_str(result)
+        return result_object
 
     @staticmethod
     def split_string(string, len_of_num):
-        str1 = BigInteger('')
-        str2 = BigInteger('')
-        for i in range(len_of_num):
-            if i < len_of_num / 2:
-                str1.a_number += string[i]
-            else:
-                str2.a_number += string[i]
+        str1, str2 = string[:len_of_num//2], string[len_of_num//2:]
+        str1 = BigInteger(str1)
+        str2 = BigInteger(str2)
         return str1, str2
 
-    def multiplying(self, x):
+    def __mul__(self, x):
         """number has a form : BigNumber1 = high1*B**len(object.a_number) + low1"""
-        self_len = len(self.a_number)
-        len_x = len(x.a_number)
-        if self_len < 3 or len_x < 3:
+
+        if len(x.a_number) < 4 or len(self.a_number) < 4:
             string_result = str(int(self.a_number) * int(x.a_number))
             result = BigInteger(string_result)
             return result
-        print(str(10 ** (len(self.a_number))))
-        high1, low1 = BigInteger.split_string(self.a_number, len(self.a_number))
-        high2, low2 = BigInteger.split_string(x.a_number, len(x.a_number))
 
-        z0 = low1.multiplying(low2)
+        m = min(len(self.a_number), len(x.a_number))
+        m2 = m // 2
 
-        z1 = (low1.add(high1)[0]).multiplying(low2.add(high2)[0])
+        high1, low1 = BigInteger.split_string(self.a_number, m2)
+        high2, low2 = BigInteger.split_string(x.a_number, m2)
 
-        z2 = high1.multiplying(high2)
+        z0 = low1 * low2
 
-        print(str(10 ** (len(self.a_number))))
-        tmp_mul1 = BigInteger(str(10 ** (len(self.a_number))))
-        tmp_mul2 = BigInteger(str(10 ** (len(self.a_number) // 2)))
-        return z2.multiplying(tmp_mul1).add(((z1.subtract(z2)[0].subtract(z0))[0].multiplying(tmp_mul2).add(z0)[0]))
+        z1 = (low1 + high1) * (low2 + high2)
+
+        z2 = high1 * high2
+
+        tmp_mul1 = BigInteger(str(10 ** m2 * 2))
+        tmp_mul2 = BigInteger(str(10 ** m2))
+
+        result = (z2 * tmp_mul1) + (z1 - z2 - z0) * tmp_mul2 + z0
+        return result
 
     def factorial(self):
         unit = BigInteger('1')
@@ -116,10 +115,13 @@ def make_random_string(length_of_table, max_number):
 
 
 def main():
-    big_number1 = make_random_string(100, 9)
-    big_number2 = make_random_string(100, 9)
-    x1 = BigInteger(big_number1)
-    x2 = BigInteger(big_number2)
+    big_number1 = make_random_string(4, 9)
+    big_number2 = make_random_string(4, 9)
+    # x1 = BigInteger(big_number1)
+    # x2 = BigInteger(big_number2)
+
+    x1 = BigInteger('209222')
+    x2 = BigInteger('111213')
 
     "printing"
     print('x1 =         ', end='')
@@ -128,14 +130,15 @@ def main():
     x2.printing()
 
     "adding"
-    print('adding:     ', x1.add(x2))
+    print('adding:     ', end='')
+    (x1 + x2).printing()
 
     "subtracting"
-    print('subtracting:', x1.subtract(x2))
-
+    print('subtracting: ', end='')
+    (x1 - x2).printing()
     "multiplying"
-    print('multiplying:', x1.multiplying(x2))
-
+    print('multiplying: ', end='')
+    (x1 * x2).printing()
     "factorial"
     # print('factorial: ', x1.factorial())
 
