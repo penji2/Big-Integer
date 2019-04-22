@@ -61,7 +61,8 @@ class BigInteger:
 
     @staticmethod
     def split_string(string, len_of_num):
-        str1, str2 = string[:len_of_num//2], string[len_of_num//2:]
+        str1, str2 = string[:len_of_num], string[len_of_num:]
+        print('str1=', str1, 'str2=', str2)
         str1 = BigInteger(str1)
         str2 = BigInteger(str2)
         return str1, str2
@@ -75,21 +76,28 @@ class BigInteger:
             return result
 
         m = min(len(self.a_number), len(x.a_number))
+        # print(m)
         m2 = m // 2
+        # print(m2)
 
         high1, low1 = BigInteger.split_string(self.a_number, m2)
         high2, low2 = BigInteger.split_string(x.a_number, m2)
 
-        z0 = low1 * low2
-
-        z1 = (low1 + high1) * (low2 + high2)
-
-        z2 = high1 * high2
+        z0 = low1 * low2  # 213*222
+        print('z0 = ')
+        z0.printing()
+        z1 = (low1 + high1) * (low2 + high2)  # (222 + 209) * (111 + 213)
+        print('z1 = ')
+        z1.printing()
+        z2 = high1 * high2  # 209 * 111
+        print('z2 = ')
+        z2.printing()
 
         tmp_mul1 = BigInteger(str(10 ** m2 * 2))
         tmp_mul2 = BigInteger(str(10 ** m2))
-
-        result = (z2 * tmp_mul1) + (z1 - z2 - z0) * tmp_mul2 + z0
+        # print('TEST')
+        # (z1 - z2 - z0).printing()
+        result = (z2 * tmp_mul1) + (((z1 - z2) - z0) * tmp_mul2) + z0
         return result
 
     def factorial(self):
