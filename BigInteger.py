@@ -116,13 +116,11 @@ def testing(x):
     pass
 
 
-def make_random_string(length_of_table, max_number):
-    random_table = np.random.randint(1, max_number, length_of_table)
-    string = BigInteger.convert_to_str(random_table)
-    return string
-
-
-def main():
+if __name__ == '__main__':
+    def make_random_string(length_of_table, max_number):
+        random_table = np.random.randint(1, max_number, length_of_table)
+        string = BigInteger.convert_to_str(random_table)
+        return string
     big_number1 = make_random_string(4, 9)
     big_number2 = make_random_string(4, 9)
     # x1 = BigInteger(big_number1)
@@ -150,7 +148,5 @@ def main():
     "factorial"
     # print('factorial: ', x1.factorial())
 
-
-main()
 
 
